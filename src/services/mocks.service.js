@@ -20,19 +20,32 @@ export const generateMockUsers = async (cant = 50) => {
     }
   };
 
+  export const generateMockPets = async (cant = 50) => {
+    try {
+      const petsArray = [];
+  
+      for (let i = 0; i < cant; i++) {
+        const pet = await generatePet(); 
+        petsArray.push(pet);
+      }
+  
+      const pets = await PetModel.create(petsArray);
+  
+      return pets;
+    } catch (error) {
+      console.error("Error creating mock pets:", error);
+      throw new Error('Failed to create mock pets');
+    }
+  };
+
   export const generateData = async (userCount = 0, petCount = 0) => {
     try {
       const usersArray = await generateMockUsers(userCount);
   
-      const petsArray = [];
-      for (let i = 0; i < petCount; i++) {
-        const pet = await generatePet();
-        petsArray.push(pet);
-      }
+      const petsArray = await generateMockUsers(petCount)
+
   
-      const insertedPets = await PetModel.create(petsArray);
-  
-      return { usersArray, insertedPets };
+      return { usersArray, petsArray };
     } catch (error) {
       console.error("Error creating mock data:", error);
       throw new Error('Failed to create mock data');
